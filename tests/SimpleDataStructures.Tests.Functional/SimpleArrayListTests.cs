@@ -31,7 +31,7 @@ public class SimpleArrayListTests
     }
 
     [Fact]
-    public void DoubeTheCapacityAsNeeded()
+    public void DoubleTheCapacityAsNeeded()
     {
         var list = new SimpleArrayList<int>(capacity: 4);
 

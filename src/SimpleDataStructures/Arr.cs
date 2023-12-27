@@ -67,16 +67,6 @@ public class Arr
         return -1;
     }
 
-    public static T?[] Trim<T>(T[] items, int newCapacity)
-    {
-        var newItems = new T?[newCapacity];
-
-        var length = Math.Min(items.Length, newCapacity);
-
-        Array.Copy(items, newItems, length);
-
-        return newItems;
-    }
 
     /// <summary>
     /// Finds all occurrences of the given item with in the given array.
@@ -106,6 +96,17 @@ public class Arr
         }
 
         return simpleList.AsArray();
+    }
+
+    public static T?[] Trim<T>(T[] items, int newCapacity)
+    {
+        var newItems = new T?[newCapacity];
+
+        var length = Math.Min(items.Length, newCapacity);
+
+        Array.Copy(items, newItems, length);
+
+        return newItems;
     }
 
     /// <summary>

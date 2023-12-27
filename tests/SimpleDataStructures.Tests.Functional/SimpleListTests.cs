@@ -63,5 +63,4 @@ public class SimpleListTests
         Assert.Equal(2, list.Count);
         Assert.Equal(5, list.Capacity);
     }
-
 }

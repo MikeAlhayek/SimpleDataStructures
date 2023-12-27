@@ -5,7 +5,7 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
     private const double _extendFactor = 1.3;
     private const int _defaultSize = 17;
 
-    private int _bucketCapacity;
+    private readonly int _bucketCapacity;
 
     private int _size = 0;
     private int _totalItems = 0;

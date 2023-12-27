@@ -8,7 +8,7 @@ public class SimpleHashTableTests
     public void AddCorrectAmount()
     {
         var hashTable = new SimpleHashTable<int>();
-        // the following numbers should force the table to rehash.
+        // The following numbers should force the table to rehash.
         hashTable.Add(1);
         hashTable.Add(1);
         hashTable.Add(18);

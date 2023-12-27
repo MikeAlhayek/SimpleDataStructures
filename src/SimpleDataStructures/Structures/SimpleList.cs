@@ -104,7 +104,7 @@ public class SimpleList<T> : SimpleArrayList<T> where T : IEquatable<T?>
                     break;
                 }
             }
-
+            var s = new LinkedList<int>();
             if (removed)
             {
                 removed = false;
