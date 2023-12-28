@@ -2,19 +2,19 @@ using BenchmarkDotNet.Attributes;
 
 namespace SimpleDataStructures.Benchmarks.Markers;
 
-public class NumEvenBenchmarker
+public class NumOddBenchmark
 {
     private const int _num = int.MaxValue;
 
     [Benchmark(Baseline = true)]
-    public void IsEven()
+    public void IsOdd()
     {
-        Num.IsEven(_num);
+        Num.IsOdd(_num);
     }
 
     [Benchmark]
-    public bool IsEvenBitwise()
+    public bool IsOddBitwise()
     {
-        return (_num & 1) == 0;
+        return (_num & 1) == 1;
     }
 }

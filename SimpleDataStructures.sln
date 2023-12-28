@@ -14,11 +14,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D7636597-FD84-4254-ADE5-C0B5756AC037}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{D0005A73-BE44-424D-A217-9E674EF471CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDataStructures.Benchmarks", "benchmarks\SimpleDataStructures.Benchmarks\SimpleDataStructures.Benchmarks.csproj", "{B5B3E0E7-8A57-443D-A250-49CFD451DF1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDataStructures.Benchmarks", "benchmarks\SimpleDataStructures.Benchmarks\SimpleDataStructures.Benchmarks.csproj", "{B5B3E0E7-8A57-443D-A250-49CFD451DF1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

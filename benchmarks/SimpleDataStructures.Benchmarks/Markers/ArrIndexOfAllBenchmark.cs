@@ -3,7 +3,7 @@ using SimpleDataStructures.Structures;
 
 namespace SimpleDataStructures.Benchmarks.Markers;
 
-public class ArrIndexOfAllBenchmarker
+public class ArrIndexOfAllBenchmark
 {
     private readonly int[] _items = Arr.Range(1, 5_000);
     private readonly int[] _locate = Arr.Range(100, 200);
