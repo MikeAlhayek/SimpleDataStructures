@@ -8,6 +8,8 @@ All the functionalities presented in this project already exist in the .Net fram
 - `SimpleArrayList<>`: Manages a list of items with a functionality similar to `ArrayList<>` in .Net.
 - `SimpleLinkedList<>`: Offers a means to manage a linked list, parallel to the functionality provided by `LinkedList<>` in .Net.
 - `SimpleHashTable<>`: Manages a hash table for rapid lookups, similar to the functionality of `HashSet<>` in .Net.
+- `SimpleStack<>`: Manages a stack using a first-in, last-out (FILO) approach, similar to the functionality of `Stack<>` in .Net.
+- `SimpleQueue<>`: Manages a queue using a first-in, first-out (FIFO) approach, similar to the functionality of `Queue<>` in .Net.
 
 Additionally, there are variations of static helpers within the Arr class. These methods are also available in the .Net framework or the .Net runtime.
 
