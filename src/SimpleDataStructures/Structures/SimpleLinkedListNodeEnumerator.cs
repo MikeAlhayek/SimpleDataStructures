@@ -1,9 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace SimpleDataStructures.Structures;
 
-public class SimpleLinkedListNodeEnumerator<T>(SimpleLinkedListNode<T>? root)
-    : IEnumerator<T?> where T : IEquatable<T?>
+public class SimpleLinkedListNodeEnumerator<T>(SimpleLinkedListNode<T>? root) : IEnumerator<T?>
 {
     private readonly SimpleLinkedListNode<T>? _root = root;
 

@@ -17,7 +17,7 @@ public class Arr
     /// <param name="item">The item to locate.</param>
     /// <returns>Returns the index of the first occurrence of a given value in an array.
     /// Returns -1 when no items were found.</returns>
-    public static int IndexOf<T>(T?[] items, T? item) where T : IEquatable<T?>
+    public static int IndexOf<T>(T?[] items, T? item)
     {
         ArgumentNullException.ThrowIfNull(items, nameof(items));
 
@@ -48,7 +48,7 @@ public class Arr
     /// <param name="item">The item to locate.</param>
     /// <returns>Returns the index of the last occurrence of a given value in an array.
     /// Returns -1 when no items were found.</returns>
-    public static int LastIndexOf<T>(T?[] items, T? value) where T : IEquatable<T?>
+    public static int LastIndexOf<T>(T?[] items, T? value)
     {
         ArgumentNullException.ThrowIfNull(items, nameof(items));
 
@@ -76,7 +76,7 @@ public class Arr
     /// <param name="values">The items to locate.</param>
     /// <returns>Returns an array of indexes where each occurrence was found of the given array.
     /// Returns -1 when no items were found.</returns>
-    public static int[] IndexOfAll<T>(T[] items, T[] values) where T : IEquatable<T?>
+    public static int[] IndexOfAll<T>(T[] items, T[] values)
     {
         ArgumentNullException.ThrowIfNull(items, nameof(items));
         ArgumentNullException.ThrowIfNull(values, nameof(values));
@@ -207,7 +207,7 @@ public class Arr
         }
     }
 
-    public static T[] Reduce<T>(T[] items, Func<int, T?, bool> callback) where T : IEquatable<T?>
+    public static T[] Reduce<T>(T[] items, Func<int, T?, bool> callback)
     {
         ArgumentNullException.ThrowIfNull(items, nameof(items));
 

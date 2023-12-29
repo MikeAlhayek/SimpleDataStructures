@@ -1,14 +1,22 @@
 namespace SimpleDataStructures.Structures;
 
-public class SimpleHashTable<T> where T : IEquatable<T?>
+public class SimpleHashTable<T>
 {
     private const double _extendFactor = 1.3;
     private const int _defaultSize = 17;
 
     private readonly int _bucketCapacity;
 
-    private int _size = 0;
+    /// <summary>
+    /// Represents the total items available is all buckets.
+    /// Anytime there is a collision, a bucket will have more than one item.
+    /// </summary>
     private int _totalItems = 0;
+
+    /// <summary>
+    /// List of indexes in _bucketsTable that are not null.
+    /// </summary>
+    private SimpleArrayList<int> _bucketsIndexes;
 
     private SimpleArrayList<SimpleHashBucket> _bucketsTable;
 
@@ -21,6 +29,7 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
         _bucketCapacity = GetBucketCapacity(options);
+        _bucketsIndexes = new SimpleArrayList<int>(capacity);
         _bucketsTable = new(capacity);
     }
 
@@ -30,6 +39,7 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
 
         var capacity = items.Length > 0 ? Num.GetNextPrimeNumber(items.Length) : _defaultSize;
         _bucketCapacity = GetBucketCapacity(options);
+        _bucketsIndexes = new SimpleArrayList<int>(capacity);
         _bucketsTable = new(capacity);
 
         for (var i = 0; i < items.Length; i++)
@@ -53,15 +63,15 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
             _bucketsTable[index] = new SimpleHashBucket(index, _bucketCapacity);
 
             _bucketsTable[index]!.Add(item);
-            _size++;
+            _bucketsIndexes.Add(index);
             _totalItems++;
             return true;
         }
 
         if (_bucketsTable[index]!.IsFull)
         {
-            // rehash the table then repeat.
-            RehashTable(ref _bucketsTable, SimpleHashTable<T>.GetNextSize(_bucketsTable.Capacity));
+            // Rehash the table then repeat.
+            RehashTable(_bucketsTable, SimpleHashTable<T>.GetNextSize(_bucketsTable.Capacity));
 
             return Add(item);
         }
@@ -91,7 +101,7 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
         if (totalItemsInBucket == 1)
         {
             _bucketsTable[index]!.Clear();
-            _size--;
+            _bucketsIndexes.RemoveAt(index);
             _totalItems--;
             return true;
         }
@@ -108,7 +118,7 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
     }
 
     public int Count
-        => _size;
+        => _totalItems;
 
     public bool Contains(T? item)
     {
@@ -145,12 +155,15 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
     {
         var items = new T?[_totalItems];
 
-        var index = 0;
-        for (var i = 0; i < _bucketsTable.Count; i++)
+        var itemIndex = 0;
+
+        for (var i = 0; i < _bucketsIndexes.Count; i++)
         {
-            foreach (var bucket in _bucketsTable[i]!._items)
+            var bucketIndex = _bucketsIndexes[i];
+
+            for (var x = 0; x < _bucketsTable[bucketIndex]!.Length; x++)
             {
-                items[index++] = bucket;
+                items[itemIndex++] = _bucketsTable[bucketIndex]![x];
             }
         }
 
@@ -163,9 +176,10 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
         _bucketsTable = new SimpleArrayList<SimpleHashBucket>(_defaultSize);
     }
 
-    private void RehashTable(ref SimpleArrayList<SimpleHashBucket> existing, int nextSize)
+    private void RehashTable(SimpleArrayList<SimpleHashBucket> existing, int nextSize)
     {
         var table = new SimpleArrayList<SimpleHashBucket>(nextSize);
+        var indexes = new SimpleArrayList<int>(nextSize);
         var size = 0;
         for (var i = 0; i < existing.Capacity; i++)
         {
@@ -189,6 +203,7 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
                     table[index] = new SimpleHashBucket(index, _bucketCapacity);
                     table[index]!.Add(existing[i]![x]!);
 
+                    indexes.Add(index);
                     size++;
 
                     continue;
@@ -196,10 +211,13 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
 
                 if (table[index]!.IsFull)
                 {
-                    RehashTable(ref existing, SimpleHashTable<T>.GetNextSize(table.Count));
+                    var sizeAfterNext = table.Count;
 
                     // Clear table after rehash to free up the unwanted data.
                     table.Clear();
+
+                    RehashTable(existing, SimpleHashTable<T>.GetNextSize(sizeAfterNext));
+
                     return;
                 }
 
@@ -207,9 +225,8 @@ public class SimpleHashTable<T> where T : IEquatable<T?>
             }
         }
 
-        existing.Clear();
-        existing = table;
-        _size = size;
+        _bucketsTable = table;
+        _bucketsIndexes = indexes;
     }
 
     private static int GetBucketCapacity(HashTableOptions? options)

@@ -7,24 +7,24 @@ public class SimpleListTests
     [Fact]
     public void ListThrowExceptionWhenFull()
     {
-        var items = Arr.Range(1, Arr.MaxCapacity);
+        var items = Arr.Range(1, 100);
 
-        var list = new SimpleList<int>(items);
+        var list = new SimpleList<int>(items, absoluteMaxCapacity: 100);
 
-        Assert.Throws<ArgumentException>(() => list.AddRange([1, 2]));
+        Assert.Throws<OutOfMemoryException>(() => list.AddRange([1, 2]));
     }
 
     [Fact]
     public void CanInsertInLastAvailableSlot()
     {
-        var items = Arr.Range(1, Arr.MaxCapacity);
+        var items = Arr.Range(1, 99);
 
-        var list = new SimpleList<int>(items);
+        var list = new SimpleList<int>(items, absoluteMaxCapacity: 100);
 
         list.Add(1);
 
-        Assert.Equal(Arr.MaxCapacity, list.Count);
-        Assert.Equal(Arr.MaxCapacity, list.Capacity);
+        Assert.Equal(100, list.Count);
+        Assert.Equal(100, list.Capacity);
     }
 
     [Fact]

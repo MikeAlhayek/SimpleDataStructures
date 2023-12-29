@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace SimpleDataStructures.Structures;
 
-public class SimpleLinkedList<T> : IEnumerable<T?> where T : IEquatable<T?>
+public class SimpleLinkedList<T> : IEnumerable<T?>
 {
     private SimpleLinkedListNode<T>? _root = null;
 

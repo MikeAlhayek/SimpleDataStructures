@@ -57,7 +57,7 @@ public class ArrTests
     [InlineData(-10, 10, 21)]
     [InlineData(-10, 0, 11)]
     [InlineData(-20, -10, 11)]
-    [InlineData(1, Arr.MaxCapacity, Arr.MaxCapacity)]
+    [InlineData(1, 1000, 1000)]
     public void RangeReturnsCollectLength(int min, int max, int actualLength)
     {
         var items = Arr.Range(min, max);

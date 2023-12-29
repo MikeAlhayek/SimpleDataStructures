@@ -1,17 +1,31 @@
 namespace SimpleDataStructures.Structures;
 
-public class SimpleList<T> : SimpleArrayList<T> where T : IEquatable<T?>
+public class SimpleList<T> : SimpleArrayList<T>
 {
-    public SimpleList() : base()
+    public SimpleList()
+        : base()
     {
     }
 
-    public SimpleList(int capacity) : base(capacity)
+    public SimpleList(int capacity)
+        : base(capacity)
+    {
+    }
+
+
+    public SimpleList(int capacity, int absoluteMaxCapacity)
+    : base(capacity, absoluteMaxCapacity)
     {
     }
 
     public SimpleList(T?[] items)
         : base(items)
+    {
+    }
+
+
+    public SimpleList(T?[] items, int absoluteMaxCapacity)
+        : base(items, absoluteMaxCapacity)
     {
     }
 
@@ -23,56 +37,50 @@ public class SimpleList<T> : SimpleArrayList<T> where T : IEquatable<T?>
 
         foreach (var item in items)
         {
-            _items![++_nextAvailableIndex] = item;
+            Items![++NextAvailableIndex] = item;
         }
 
         return this;
     }
 
-    public int IndexOf(T? item)
-        => Arr.IndexOf(_items, item);
-
-    public int LastIndexOf(T? item)
-        => Arr.LastIndexOf(_items, item);
-
     public int[] IndexOfAll(T[] items)
-        => Arr.IndexOfAll(_items!, items);
+        => Arr.IndexOfAll(Items!, items);
 
     public void ForEach(Action<int, T?> callback)
-        => Arr.ForEach(_items!, callback);
+        => Arr.ForEach(Items!, callback);
 
     public SimpleList<T> Where(Func<int, T?, bool> callback)
     {
-        var items = Arr.Reduce(_items!, callback);
+        var items = Arr.Reduce(Items!, callback);
 
         return new SimpleList<T>(items);
     }
 
     public SimpleList<T> Remove(T item)
     {
-        var updated = new T?[_capacity];
+        var updated = new T?[Capacity];
         var index = 0;
-        for (var i = 0; i < _items!.Length; i++)
+        for (var i = 0; i < NextAvailableIndex; i++)
         {
-            if (_items[i] != null && _items[i]!.Equals(item))
+            if (Items[i] != null && Items[i]!.Equals(item))
             {
                 continue;
             }
 
-            updated[index++] = _items[i];
+            updated[index++] = Items[i];
         }
 
-        _items = updated;
-        _nextAvailableIndex = index + 1;
+        Items = updated;
+        NextAvailableIndex = index + 1;
 
         return this;
     }
 
     public bool Contains(T item)
     {
-        for (var i = 0; i < _items!.Length; i++)
+        for (var i = 0; i < NextAvailableIndex; i++)
         {
-            if (_items[i] != null && _items[i]!.Equals(item))
+            if (Items[i] != null && Items[i]!.Equals(item))
             {
                 return true;
             }
@@ -85,16 +93,16 @@ public class SimpleList<T> : SimpleArrayList<T> where T : IEquatable<T?>
     {
         ArgumentNullException.ThrowIfNull(items, nameof(items));
 
-        var updated = new T?[_capacity];
+        var updated = new T?[Capacity];
         var index = 0;
         var removed = false;
 
         // get all indexes that should be removed.
         // get all the items that are not in the index.
 
-        for (var x = 0; x < _items!.Length; x++)
+        for (var x = 0; x < NextAvailableIndex; x++)
         {
-            var item = _items![x];
+            var item = Items![x];
             for (var y = 0; y < items.Length; y++)
             {
                 var removeItem = items[y];
@@ -104,7 +112,7 @@ public class SimpleList<T> : SimpleArrayList<T> where T : IEquatable<T?>
                     break;
                 }
             }
-            var s = new LinkedList<int>();
+
             if (removed)
             {
                 removed = false;
@@ -114,8 +122,8 @@ public class SimpleList<T> : SimpleArrayList<T> where T : IEquatable<T?>
             updated[index++] = item;
         }
 
-        _items = updated;
-        _nextAvailableIndex = index;
+        Items = updated;
+        NextAvailableIndex = index;
 
         return this;
     }
