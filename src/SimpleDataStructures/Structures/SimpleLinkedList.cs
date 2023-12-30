@@ -25,22 +25,27 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
 
     public bool Contains(T value)
     {
-        return ContainsInternal(_root, value);
+        return FindInternal(_root, value) is not null;
     }
 
-    private static bool ContainsInternal(SimpleLinkedListNode<T>? node, T locate)
+    public SimpleLinkedListNode<T>? Find(T value)
+    {
+        return FindInternal(_root, value);
+    }
+
+    private static SimpleLinkedListNode<T>? FindInternal(SimpleLinkedListNode<T>? node, T locate)
     {
         if (node is null)
         {
-            return false;
+            return null;
         }
 
         if (node.Value is not null && node.Value.Equals(locate))
         {
-            return true;
+            return node;
         }
 
-        return ContainsInternal(node.Next, locate);
+        return FindInternal(node.Next, locate);
     }
 
     public bool IsEmpty()
