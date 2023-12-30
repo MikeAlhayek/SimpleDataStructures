@@ -1,6 +1,8 @@
-namespace SimpleDataStructures.Structures;
+using SimpleDataStructures.Structures;
 
-public class SimpleHashTable<T>
+namespace SimpleDataStructures.Alternatives.Structures;
+
+public class SimpleHashTableNoHashCache<T>
 {
     private const double _extendFactor = 1.3;
     private const int _defaultSize = 17;
@@ -18,14 +20,14 @@ public class SimpleHashTable<T>
     /// </summary>
     private SimpleArrayList<int> _bucketsIndexes;
 
-    private SimpleArrayList<SimpleHashBucket<T>> _bucketsTable;
+    private SimpleArrayList<SimpleHashBucketNoHashCache<T>> _bucketsTable;
 
-    public SimpleHashTable(HashTableOptions? options = null)
+    public SimpleHashTableNoHashCache(HashTableOptions? options = null)
          : this(_defaultSize, options)
     {
     }
 
-    public SimpleHashTable(int capacity, HashTableOptions? options = null)
+    public SimpleHashTableNoHashCache(int capacity, HashTableOptions? options = null)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
         _bucketCapacity = GetBucketCapacity(options);
@@ -33,7 +35,7 @@ public class SimpleHashTable<T>
         _bucketsTable = new(capacity);
     }
 
-    public SimpleHashTable(T?[] items, HashTableOptions? options = null)
+    public SimpleHashTableNoHashCache(T?[] items, HashTableOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(items);
 
@@ -60,9 +62,9 @@ public class SimpleHashTable<T>
 
         if (_bucketsTable[index] == null)
         {
-            _bucketsTable[index] = new SimpleHashBucket<T>(index);
+            _bucketsTable[index] = new SimpleHashBucketNoHashCache<T>(index);
 
-            _bucketsTable[index]!.Add(item, hash);
+            _bucketsTable[index]!.Add(item);
             _bucketsIndexes.Add(index);
             _totalItems++;
             return true;
@@ -72,12 +74,12 @@ public class SimpleHashTable<T>
         {
             // The bucket have reached max capacity, 
             // Rehash the table then attempt to add again.
-            RehashTable(_bucketsTable, SimpleHashTable<T>.GetNextSize(_bucketsTable.Capacity));
+            RehashTable(_bucketsTable, GetNextSize(_bucketsTable.Capacity));
 
             return Add(item);
         }
 
-        var added = _bucketsTable[index]!.Add(item, hash);
+        var added = _bucketsTable[index]!.Add(item);
 
         if (added)
         {
@@ -136,13 +138,11 @@ public class SimpleHashTable<T>
             return false;
         }
 
-        var locate = new SimpleHashBucketNode<T>(item, hash);
-
         for (var i = 0; i < _bucketsIndexes.Count; i++)
         {
             var bucketIndex = _bucketsIndexes[i];
 
-            if (_bucketsTable[bucketIndex]!.Items.ValueExists(locate))
+            if (_bucketsTable[bucketIndex]!.Items.ValueExists(item))
             {
                 return true;
             }
@@ -163,7 +163,7 @@ public class SimpleHashTable<T>
 
             foreach (var node in _bucketsTable[bucketIndex]!.Items)
             {
-                items[itemIndex++] = node!.Value;
+                items[itemIndex++] = node;
             }
         }
 
@@ -173,12 +173,12 @@ public class SimpleHashTable<T>
     public void Clear()
     {
         _bucketsTable.Clear();
-        _bucketsTable = new SimpleArrayList<SimpleHashBucket<T>>(_defaultSize);
+        _bucketsTable = new SimpleArrayList<SimpleHashBucketNoHashCache<T>>(_defaultSize);
     }
 
-    private void RehashTable(SimpleArrayList<SimpleHashBucket<T>> existing, int nextSize)
+    private void RehashTable(SimpleArrayList<SimpleHashBucketNoHashCache<T>> existing, int nextSize)
     {
-        var table = new SimpleArrayList<SimpleHashBucket<T>>(nextSize);
+        var table = new SimpleArrayList<SimpleHashBucketNoHashCache<T>>(nextSize);
         var indexes = new SimpleArrayList<int>(nextSize);
 
         for (var i = 0; i < _bucketsIndexes.Count; i++)
@@ -187,11 +187,13 @@ public class SimpleHashTable<T>
 
             foreach (var value in _bucketsTable[bucketIndex]!.Items)
             {
-                var index = value!.HashCode % table.Capacity;
+                var hash = value!.GetHashCode();
+
+                var index = hash % table.Capacity;
 
                 if (table[index] is null)
                 {
-                    table[index] = new SimpleHashBucket<T>(index);
+                    table[index] = new SimpleHashBucketNoHashCache<T>(index);
                     table[index]!.Add(value);
 
                     indexes.Add(index);
@@ -206,7 +208,7 @@ public class SimpleHashTable<T>
                     // Clear table after rehash to free up the unwanted data.
                     table.Clear();
 
-                    RehashTable(existing, SimpleHashTable<T>.GetNextSize(sizeAfterNext));
+                    RehashTable(existing, GetNextSize(sizeAfterNext));
 
                     return;
                 }

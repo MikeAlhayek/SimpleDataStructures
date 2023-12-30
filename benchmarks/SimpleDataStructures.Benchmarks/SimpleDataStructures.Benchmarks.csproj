@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SimpleDataStructures.Alternatives\SimpleDataStructures.Alternatives.csproj" />
     <ProjectReference Include="..\..\src\SimpleDataStructures\SimpleDataStructures.csproj" />
   </ItemGroup>
 

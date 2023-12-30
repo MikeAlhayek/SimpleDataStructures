@@ -48,7 +48,7 @@ public class SimpleStack<T>
     }
 
     public bool Contains(T value)
-        => _list.Contains(value);
+        => _list.ValueExists(value);
 
     public int Size()
         => _list.Count;

@@ -9,13 +9,10 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
 
     private SimpleLinkedListNode<T>? _last = null;
 
-    private readonly SimpleList<SimpleLinkedListNode<T>> _items = new();
+    private int _count = 0;
 
     public int Count
-        => _items.Count;
-
-    public SimpleLinkedListNode<T>[] AsReadOnly()
-        => _items.AsArray()!;
+        => _count;
 
     public SimpleLinkedListNode<T>? GetFirstOrDefault()
         => _root;
@@ -23,17 +20,37 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
     public SimpleLinkedListNode<T>? GetLastOrDefault()
         => _last ?? _root;
 
-    public bool Contains(T value)
+    public bool ValueExists(T value)
     {
-        return FindInternal(_root, value) is not null;
+        return FindByValueInternal(_root, value) is not null;
     }
 
     public SimpleLinkedListNode<T>? Find(T value)
     {
-        return FindInternal(_root, value);
+        return FindByValueInternal(_root, value);
     }
 
-    private static SimpleLinkedListNode<T>? FindInternal(SimpleLinkedListNode<T>? node, T locate)
+    public bool Exists(SimpleLinkedListNode<T> locate)
+    {
+        return ExistsInternal(_root, locate);
+    }
+
+    private static bool ExistsInternal(SimpleLinkedListNode<T>? root, SimpleLinkedListNode<T> locate)
+    {
+        if (root is null)
+        {
+            return false;
+        }
+
+        if (root.Equals(locate))
+        {
+            return true;
+        }
+
+        return ExistsInternal(root.Next, locate);
+    }
+
+    private static SimpleLinkedListNode<T>? FindByValueInternal(SimpleLinkedListNode<T>? node, T locate)
     {
         if (node is null)
         {
@@ -45,17 +62,20 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
             return node;
         }
 
-        return FindInternal(node.Next, locate);
+        return FindByValueInternal(node.Next, locate);
     }
 
     public bool IsEmpty()
-        => _root == null;
+        => _count > 0;
 
     public void Clear()
     {
-        _items.Clear();
-        _last = null;
-        _root = null;
+        while (!IsEmpty())
+        {
+            Remove(GetLastOrDefault()!);
+        }
+
+        _count = 0;
     }
 
     public SimpleLinkedListNode<T> InsertFirst(T item)
@@ -63,8 +83,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         if (_root is null)
         {
             _root = new SimpleLinkedListNode<T>(item);
-
-            _items.Add(_root);
+            _count++;
 
             return _root;
         }
@@ -77,8 +96,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         };
 
         previouslyRoot.Previous = _root;
-
-        _items.Add(_root);
+        _count++;
 
         return _root;
     }
@@ -101,7 +119,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
 
             _root.Next = _last;
 
-            _items.Add(_last);
+            _count++;
 
             return _last;
         }
@@ -114,9 +132,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         };
 
         previouslyLast.Next = _last;
-
-        _items.Add(_last);
-
+        _count++;
         return _last;
     }
 
@@ -138,28 +154,17 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
             return InsertNext(itemToInsert);
         }
 
-        SimpleLinkedListNode<T>? node = null;
-
-        for (var i = 0; i < _items.Count; i++)
+        if (!Exists(item))
         {
-            if (_items[i] == null || !_items[i]!.Equals(item))
-            {
-                continue;
-            }
-
-            node = new SimpleLinkedListNode<T>(itemToInsert)
-            {
-                Previous = _items[i],
-            };
-
-            _items[i]!.Next = node;
-
-            _items.Add(node);
-
-            break;
+            throw new ArgumentOutOfRangeException("Unable to find an item to insert after.");
         }
 
-        return node ?? throw new ArgumentOutOfRangeException("Unable to find an item to insert after.");
+        _count++;
+
+        return new SimpleLinkedListNode<T>(itemToInsert)
+        {
+            Previous = item,
+        };
     }
 
     public SimpleLinkedListNode<T> InsertBefore(T itemToInsert, SimpleLinkedListNode<T> item)
@@ -180,31 +185,20 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
             return InsertFirst(itemToInsert);
         }
 
-        SimpleLinkedListNode<T>? node = null;
-
-        for (var i = 0; i < _items.Count; i++)
+        if (!Exists(item))
         {
-            if (_items[i] == null || !_items[i]!.Equals(item))
-            {
-                continue;
-            }
-
-            node = new SimpleLinkedListNode<T>(itemToInsert)
-            {
-                Next = _items[i],
-            };
-
-            _items[i]!.Previous = node;
-
-            _items.Add(node);
-
-            break;
+            throw new ArgumentOutOfRangeException("Unable to find an item to insert after.");
         }
 
-        return node ?? throw new ArgumentOutOfRangeException("Unable to find an item to insert before.");
+        _count++;
+
+        return new SimpleLinkedListNode<T>(itemToInsert)
+        {
+            Next = item,
+        };
     }
 
-    public SimpleLinkedListNode<T> Remove(SimpleLinkedListNode<T> item)
+    public SimpleLinkedListNode<T>? Remove(SimpleLinkedListNode<T> item)
     {
         if (item == _root)
         {
@@ -230,12 +224,17 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         }
         else
         {
+            if (!Exists(item))
+            {
+                return null;
+            }
+
             // Remove a middle node.
             // The next node of the previous node, will become the next node of the node we are removing.
             item.Previous!.Next = item.Next;
         }
 
-        _items.Remove(item);
+        _count--;
 
         return item;
     }

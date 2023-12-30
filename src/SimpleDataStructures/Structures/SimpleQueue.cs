@@ -55,5 +55,5 @@ public class SimpleQueue<T>
         => _list.Count;
 
     public bool Contains(T value)
-        => _list.Contains(value);
+        => _list.ValueExists(value);
 }

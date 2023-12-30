@@ -23,7 +23,7 @@ internal class SimpleHashBucket<T>(int key)
 
     public bool Add(SimpleHashBucketNode<T> node)
     {
-        if (Items.Contains(node))
+        if (Items.ValueExists(node))
         {
             return false;
         }
@@ -61,7 +61,6 @@ internal class SimpleHashBucket<T>(int key)
 
     public bool Contains(SimpleHashBucketNode<T> locate)
     {
-
-        return Items.Contains(locate);
+        return Items.ValueExists(locate);
     }
 }
