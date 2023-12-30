@@ -1,4 +1,4 @@
-namespace SimpleDataStructures.Structures;
+namespace SimpleDataStructures.Models;
 
 public class SimpleLinkedListNode<T>
 {

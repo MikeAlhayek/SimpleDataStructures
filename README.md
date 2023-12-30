@@ -11,7 +11,11 @@ All the functionalities presented in this project already exist in the .Net fram
 - `SimpleStack<>`: Manages a stack using a first-in, last-out (FILO) approach, similar to the functionality of `Stack<>` in .Net.
 - `SimpleQueue<>`: Manages a queue using a first-in, first-out (FIFO) approach, similar to the functionality of `Queue<>` in .Net.
 
-Additionally, there are variations of static helpers within the Arr class. These methods are also available in the .Net framework or the .Net runtime.
+Additionally, the following data structures were implemented.
+
+- `SimpleBinaryTree<>`: Manages items in a binary search.
+
+There are variations of static helpers within the `Arr` class. These methods are also available in the .Net framework or the .Net runtime.
 
 - `Arr.IndexOf`
 - `Arr.LastIndexOf`
@@ -23,4 +27,3 @@ Additionally, there are variations of static helpers within the Arr class. These
 - `Arr.ForEach`
 - `Arr.Reduce`
 - `Arr.Range`
-	

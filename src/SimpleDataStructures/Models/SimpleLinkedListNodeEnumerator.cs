@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace SimpleDataStructures.Structures;
+namespace SimpleDataStructures.Models;
 
 public class SimpleLinkedListNodeEnumerator<T>(SimpleLinkedListNode<T>? root) : IEnumerator<T?>
 {

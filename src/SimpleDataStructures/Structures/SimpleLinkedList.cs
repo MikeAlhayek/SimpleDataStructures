@@ -1,4 +1,5 @@
 using System.Collections;
+using SimpleDataStructures.Models;
 
 namespace SimpleDataStructures.Structures;
 
