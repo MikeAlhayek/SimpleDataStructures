@@ -30,4 +30,70 @@ public class SimpleLinkedListTests
             Assert.Equal(correctOrder[position++], node);
         }
     }
+
+    [Fact]
+    public void RemoveMiddleNodesCorrectly()
+    {
+        var list = new SimpleLinkedList<int>();
+
+        list.InsertNext(10);
+        list.InsertNext(20);
+        var thirty = list.InsertNext(30);
+        list.InsertNext(40);
+        list.InsertNext(50);
+        list.Remove(thirty);
+
+        var correctOrder = new[] { 10, 20, 40, 50 };
+
+        Assert.Equal(correctOrder.Length, list.Count);
+
+        var position = 0;
+
+        foreach (var node in list)
+        {
+            Assert.Equal(correctOrder[position++], node);
+        }
+    }
+
+    [Fact]
+    public void RemoveRootNodesCorrectly()
+    {
+        var list = new SimpleLinkedList<int>();
+
+        var ten = list.InsertNext(10);
+        list.InsertNext(20);
+        list.InsertNext(30);
+        list.InsertNext(40);
+        list.InsertNext(50);
+        list.Remove(ten);
+
+        var correctOrder = new[] { 20, 30, 40, 50 };
+
+        Assert.Equal(correctOrder.Length, list.Count);
+        Assert.Equal(correctOrder[0], list.GetFirstOrDefault()!.Value);
+        Assert.Equal(correctOrder[correctOrder.Length - 1], list.GetLastOrDefault()!.Value);
+
+        var position = 0;
+
+        foreach (var node in list)
+        {
+            Assert.Equal(correctOrder[position++], node);
+        }
+    }
+
+    [Fact]
+    public void RemoveLastNodeCorrectly()
+    {
+        var list = new SimpleLinkedList<int>();
+
+        var ten = list.InsertNext(10);
+
+        Assert.Equal(1, list.Count);
+
+        list.Remove(ten);
+
+        Assert.Equal(0, list.Count);
+        Assert.Null(list.GetFirstOrDefault());
+        Assert.Null(list.GetLastOrDefault());
+    }
 }

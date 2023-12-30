@@ -62,7 +62,7 @@ public class SimpleList<T> : SimpleArrayList<T>
         var index = 0;
         for (var i = 0; i < NextAvailableIndex; i++)
         {
-            if (Items[i] != null && Items[i]!.Equals(item))
+            if (Items[i] is not null && Items[i]!.Equals(item))
             {
                 continue;
             }
@@ -71,7 +71,7 @@ public class SimpleList<T> : SimpleArrayList<T>
         }
 
         Items = updated;
-        NextAvailableIndex = index + 1;
+        NextAvailableIndex = index;
 
         return this;
     }
@@ -80,7 +80,7 @@ public class SimpleList<T> : SimpleArrayList<T>
     {
         for (var i = 0; i < NextAvailableIndex; i++)
         {
-            if (Items[i] != null && Items[i]!.Equals(item))
+            if (Items[i] is not null && Items[i]!.Equals(item))
             {
                 return true;
             }
@@ -95,27 +95,15 @@ public class SimpleList<T> : SimpleArrayList<T>
 
         var updated = new T?[Capacity];
         var index = 0;
-        var removed = false;
 
-        // get all indexes that should be removed.
-        // get all the items that are not in the index.
+        var table = new SimpleHashTable<T>(items);
 
         for (var x = 0; x < NextAvailableIndex; x++)
         {
             var item = Items![x];
-            for (var y = 0; y < items.Length; y++)
-            {
-                var removeItem = items[y];
-                if (item != null && item.Equals(removeItem))
-                {
-                    removed = true;
-                    break;
-                }
-            }
 
-            if (removed)
+            if (table.Contains(item))
             {
-                removed = false;
                 continue;
             }
 

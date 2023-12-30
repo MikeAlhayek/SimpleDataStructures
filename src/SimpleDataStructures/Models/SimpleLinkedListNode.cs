@@ -2,7 +2,7 @@ namespace SimpleDataStructures.Models;
 
 public class SimpleLinkedListNode<T>
 {
-    public T? Data { get; set; }
+    public T? Value { get; set; }
 
     public SimpleLinkedListNode<T>? Previous { get; internal set; }
 
@@ -12,8 +12,8 @@ public class SimpleLinkedListNode<T>
     {
     }
 
-    public SimpleLinkedListNode(T? data)
+    public SimpleLinkedListNode(T value)
     {
-        Data = data;
+        Value = value;
     }
 }

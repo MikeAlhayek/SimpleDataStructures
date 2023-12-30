@@ -9,7 +9,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
 
     private SimpleLinkedListNode<T>? _last = null;
 
-    private readonly SimpleArrayList<SimpleLinkedListNode<T>> _items = new();
+    private readonly SimpleList<SimpleLinkedListNode<T>> _items = new();
 
     public int Count
         => _items.Count;
@@ -21,9 +21,39 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         => _root;
 
     public SimpleLinkedListNode<T>? GetLastOrDefault()
-        => _last;
+        => _last ?? _root;
 
-    public SimpleLinkedListNode<T> InsertFirst(T? item)
+    public bool Contains(T value)
+    {
+        return ContainsInternal(_root, value);
+    }
+
+    private static bool ContainsInternal(SimpleLinkedListNode<T>? node, T locate)
+    {
+        if (node is null)
+        {
+            return false;
+        }
+
+        if (node.Value is not null && node.Value.Equals(locate))
+        {
+            return true;
+        }
+
+        return ContainsInternal(node.Next, locate);
+    }
+
+    public bool IsEmpty()
+        => _root == null;
+
+    public void Clear()
+    {
+        _items.Clear();
+        _last = null;
+        _root = null;
+    }
+
+    public SimpleLinkedListNode<T> InsertFirst(T item)
     {
         if (_root is null)
         {
@@ -48,7 +78,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         return _root;
     }
 
-    public SimpleLinkedListNode<T> InsertNext(T? item)
+    public SimpleLinkedListNode<T> InsertNext(T item)
     {
         ArgumentNullException.ThrowIfNull(item, nameof(item));
 
@@ -92,7 +122,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
 
         if (_root is null)
         {
-            InsertFirst(item.Data);
+            InsertFirst(item.Value!);
 
             return InsertNext(itemToInsert);
         }
@@ -136,7 +166,7 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         {
             InsertFirst(itemToInsert);
 
-            return InsertNext(item.Data);
+            return InsertNext(item.Value!);
         }
 
         if (item.Equals(_root) || item.Equals(_last))
@@ -167,6 +197,42 @@ public class SimpleLinkedList<T> : IEnumerable<T?>
         }
 
         return node ?? throw new ArgumentOutOfRangeException("Unable to find an item to insert before.");
+    }
+
+    public SimpleLinkedListNode<T> Remove(SimpleLinkedListNode<T> item)
+    {
+        if (item == _root)
+        {
+            // Remove the root.
+            _root = _root.Next;
+            if (_root is not null)
+            {
+                _root.Previous = null;
+            }
+        }
+        else if (item == _last)
+        {
+            // Remove the last.
+            _last = _last.Previous;
+            _last!.Next = null;
+
+            if (_last is not null && _last == _root)
+            {
+                // At this point, we know that the new last node is the root.
+                // Eliminate the last node.
+                _last = null;
+            }
+        }
+        else
+        {
+            // Remove a middle node.
+            // The next node of the previous node, will become the next node of the node we are removing.
+            item.Previous!.Next = item.Next;
+        }
+
+        _items.Remove(item);
+
+        return item;
     }
 
     public IEnumerator<T?> GetEnumerator()

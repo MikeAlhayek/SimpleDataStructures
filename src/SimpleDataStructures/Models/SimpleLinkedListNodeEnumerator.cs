@@ -9,10 +9,10 @@ public class SimpleLinkedListNodeEnumerator<T>(SimpleLinkedListNode<T>? root) : 
     private SimpleLinkedListNode<T>? _current = null;
 
     public T? Current
-        => _current!.Data;
+        => _current!.Value;
 
     object? IEnumerator.Current
-        => _current!.Data;
+        => _current!.Value;
 
     public bool MoveNext()
     {
