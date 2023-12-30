@@ -18,7 +18,7 @@ public static class SimpleArrayListExtensions
         => list[0];
 
     public static T? Last<T>(this SimpleArrayList<T> list)
-        => list[list.Count - 1];
+        => list[^1];
 
     public static bool IsEmpty<T>(this SimpleArrayList<T> list)
         => list.Count == 0;

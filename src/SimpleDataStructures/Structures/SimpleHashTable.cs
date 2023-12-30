@@ -206,7 +206,7 @@ public class SimpleHashTable<T>
                     // Clear table after rehash to free up the unwanted data.
                     table.Clear();
 
-                    RehashTable(existing, SimpleHashTable<T>.GetNextSize(sizeAfterNext));
+                    RehashTable(existing, GetNextSize(sizeAfterNext));
 
                     return;
                 }

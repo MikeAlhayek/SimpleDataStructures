@@ -1,4 +1,4 @@
-﻿using SimpleDataStructures.Models;
+using SimpleDataStructures.Models;
 
 namespace SimpleDataStructures.Structures;
 
@@ -38,6 +38,92 @@ public class SimpleBinaryTree<T> where T : IComparable<T?>
         }
 
         return InternalFind(_root, value);
+    }
+
+    public void Traverse(BinaryTreeTraversalAlgorithm algorithm, Action<T> action)
+    {
+        if (_root == null)
+        {
+            return;
+        }
+
+        switch (algorithm)
+        {
+            case BinaryTreeTraversalAlgorithm.PostOrder:
+                PostOrderTraverse(_root, action);
+                break;
+            case BinaryTreeTraversalAlgorithm.PreOrder:
+                PreOrderTraverse(_root, action);
+                break;
+            default:
+                SimpleBinaryTree<T>.InOrderTraverse(_root, action);
+                break;
+        };
+    }
+
+    // left, root, right
+    private static void InOrderTraverse(SimpleBinaryTreeNode<T>? node, Action<T> action)
+    {
+        // left, root, right
+        if (node == null)
+        {
+            return;
+        }
+
+        if (node.LeftChild != null)
+        {
+            InOrderTraverse(node.LeftChild, action);
+        }
+
+        action(node.Value);
+
+        if (node.RightChild != null)
+        {
+            InOrderTraverse(node.RightChild, action);
+        }
+    }
+
+
+    // root, left, right
+    private static void PreOrderTraverse(SimpleBinaryTreeNode<T>? node, Action<T> action)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        action(node.Value);
+
+        if (node.LeftChild != null)
+        {
+            PreOrderTraverse(node.LeftChild, action);
+        }
+
+        if (node.RightChild != null)
+        {
+            PreOrderTraverse(node.RightChild, action);
+        }
+    }
+
+    // left, right, node
+    private static void PostOrderTraverse(SimpleBinaryTreeNode<T>? node, Action<T> action)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        if (node.LeftChild != null)
+        {
+            PostOrderTraverse(node.LeftChild, action);
+        }
+
+        if (node.RightChild != null)
+        {
+            PostOrderTraverse(node.RightChild, action);
+        }
+
+        action(node.Value);
     }
 
     private static SimpleBinaryTreeNode<T>? InternalFind(SimpleBinaryTreeNode<T>? start, T locate)

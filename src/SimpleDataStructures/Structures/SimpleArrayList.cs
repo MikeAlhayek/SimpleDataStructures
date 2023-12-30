@@ -8,7 +8,7 @@ public class SimpleArrayList
 public class SimpleArrayList<T>
 {
     protected T?[] Items;
-    private int _absoluteMaxCapacity;
+    private readonly int _absoluteMaxCapacity;
 
     public int Capacity { get; protected set; }
     protected int NextAvailableIndex;
