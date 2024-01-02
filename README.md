@@ -1,6 +1,6 @@
 # Basic Data Structures
 
-This endeavor is solely intended for educational purposes and shouls never be used in a production environment. The primary objective is to create classes that represent fundamental data structures, assuming that the .Net framework or runtime lacks the provision of these methods.
+This endeavor is solely intended for educational purposes and should never be used in a production environment. The primary objective is to create classes that represent fundamental data structures, assuming that the .Net framework or runtime lacks the provision of these methods.
 
 All the functionalities presented in this project already exist in the .Net framework. Nevertheless, the following list outlines the linier data structures implemented in this project without relying on advanced data structures available in .Net or LINQ:
 
@@ -11,9 +11,9 @@ All the functionalities presented in this project already exist in the .Net fram
 - `SimpleStack<>`: Manages a stack using a first-in, last-out (FILO) approach, similar to the functionality of `Stack<>` in .Net.
 - `SimpleQueue<>`: Manages a queue using a first-in, first-out (FIFO) approach, similar to the functionality of `Queue<>` in .Net.
 
-Additionally, the followint are non-linier data structures were implemented.
+Additionally, the following are non-linier data structures were implemented.
 
-- `SimpleBinarySearchTree<>`: Manages items in a binary search.
+- `SimpleBinarySearchTree<>`: Manages items in a binary search tree (BST).
 
 There are variations of static helpers within the `Arr` class. These methods are also available in the .Net framework or the .Net runtime.
 
