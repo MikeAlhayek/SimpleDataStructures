@@ -1,55 +1,48 @@
-
-
 namespace SimpleDataStructures.Structures;
-
 
 public class SimpleStack<T>
 {
     private readonly static IndexOutOfRangeException _emptyStack = new("The stack is empty.");
-    private readonly SimpleLinkedList<T> _list;
+    private readonly SimpleArrayList<T> _items;
 
     public SimpleStack()
     {
-        _list = new SimpleLinkedList<T>();
+        _items = new SimpleArrayList<T>();
     }
 
     public SimpleStack(T[] items)
     {
-        _list = new SimpleLinkedList<T>();
-
-        for (var i = 0; i < items.Length; i++)
-        {
-            _list.InsertNext(items[i]);
-        }
+        _items = new SimpleArrayList<T>(items);
     }
 
     public T Push(T value)
     {
-        _list.InsertNext(value);
+        _items.Add(value);
 
         return value;
     }
 
     public T? Pop()
     {
-        var lastNode = _list.GetLastOrDefault() ?? throw _emptyStack;
+        if (_items.IsEmpty())
+        {
+            throw _emptyStack;
+        }
 
         // Remove last available item;
-        _list.Remove(lastNode);
-
-        return lastNode.Value;
+        return _items.RemoveLast();
     }
 
     public T? Peek()
     {
-        var lastNode = _list.GetLastOrDefault() ?? throw _emptyStack;
+        if (_items.IsEmpty())
+        {
+            throw _emptyStack;
+        }
 
-        return lastNode.Value;
+        return _items.Last();
     }
 
-    public bool Contains(T value)
-        => _list.ValueExists(value);
-
     public int Size()
-        => _list.Count;
+        => _items.Count;
 }

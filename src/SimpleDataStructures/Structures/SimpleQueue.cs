@@ -3,57 +3,46 @@ namespace SimpleDataStructures.Structures;
 public class SimpleQueue<T>
 {
     private readonly static IndexOutOfRangeException _emptyQueue = new("The queue is empty.");
-    private readonly SimpleLinkedList<T> _list;
+    private readonly SimpleArrayList<T> _items;
 
     public SimpleQueue()
     {
-        _list = new SimpleLinkedList<T>();
+        _items = new SimpleArrayList<T>();
     }
 
     public SimpleQueue(T[] items)
     {
-        _list = new SimpleLinkedList<T>();
-
-        for (var i = 0; i < items.Length; i++)
-        {
-            _list.InsertNext(items[i]);
-        }
+        _items = new SimpleArrayList<T>(items);
     }
 
     public T Enqueue(T value)
     {
-        _list.InsertNext(value);
+        _items.Add(value);
 
         return value;
     }
 
     public T? Dequeue()
     {
-        var firstNode = _list.GetFirstOrDefault() ?? throw _emptyQueue;
+        if (_items.IsEmpty())
+        {
+            throw _emptyQueue;
+        }
 
         // Remove first available item;
-        _list.Remove(firstNode);
-
-        return firstNode.Value;
+        return _items.RemoveFirst();
     }
 
     public T? Peek()
     {
-        var lastNode = _list.GetFirstOrDefault() ?? throw _emptyQueue;
+        if (_items.IsEmpty())
+        {
+            throw _emptyQueue;
+        }
 
-        return lastNode.Value;
-    }
-
-    public T? Rear()
-    {
-        var lastNode = _list.GetLastOrDefault() ?? throw _emptyQueue;
-
-        return lastNode.Value;
+        return _items.First();
     }
 
     public int Size()
-        => _list.Count;
-
-    public bool Contains(T value)
-        => _list.ValueExists(value);
+        => _items.Count;
 }

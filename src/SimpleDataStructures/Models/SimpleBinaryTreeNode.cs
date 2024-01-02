@@ -8,12 +8,21 @@ public class SimpleBinaryTreeNode<T> where T : IComparable<T?>
 
     public SimpleBinaryTreeNode<T>? RightChild { get; set; }
 
+    public SimpleBinaryTreeNode<T>? Parent { get; set; }
+
     public SimpleBinaryTreeNode(T value)
     {
         ArgumentNullException.ThrowIfNull(value, nameof(value));
 
         Value = value;
     }
+
+    public bool IsLeaf()
+        => LeftChild is null && RightChild is null;
+
+    public bool HasOneChild()
+        => (LeftChild is not null || RightChild is not null)
+        && !(LeftChild is not null && RightChild is not null);
 
     public override bool Equals(object? obj)
     {

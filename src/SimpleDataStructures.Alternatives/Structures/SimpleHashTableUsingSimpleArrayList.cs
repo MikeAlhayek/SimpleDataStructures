@@ -1,6 +1,6 @@
-namespace SimpleDataStructures.Structures;
+namespace SimpleDataStructures.Structures.Alternatives;
 
-public class SimpleHashTable<T>
+public class SimpleHashTableUsingSimpleArrayList<T>
 {
     private const double _extendFactor = 1.3;
     private const int _defaultSize = 17;
@@ -20,12 +20,12 @@ public class SimpleHashTable<T>
 
     private SimpleArrayList<SimpleHashBucket<T>> _bucketsTable;
 
-    public SimpleHashTable(HashTableOptions? options = null)
+    public SimpleHashTableUsingSimpleArrayList(HashTableOptions? options = null)
          : this(_defaultSize, options)
     {
     }
 
-    public SimpleHashTable(int capacity, HashTableOptions? options = null)
+    public SimpleHashTableUsingSimpleArrayList(int capacity, HashTableOptions? options = null)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
         _bucketCapacity = GetBucketCapacity(options);
@@ -33,7 +33,7 @@ public class SimpleHashTable<T>
         _bucketsTable = new(capacity);
     }
 
-    public SimpleHashTable(T?[] items, HashTableOptions? options = null)
+    public SimpleHashTableUsingSimpleArrayList(T?[] items, HashTableOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(items);
 
@@ -62,7 +62,7 @@ public class SimpleHashTable<T>
         {
             _bucketsTable[index] = new SimpleHashBucket<T>(index);
 
-            _bucketsTable[index]!.Add(item, hash);
+            _bucketsTable[index]!.Add(item);
             _bucketsIndexes.Add(index);
             _totalItems++;
             return true;
@@ -77,7 +77,7 @@ public class SimpleHashTable<T>
             return Add(item);
         }
 
-        var added = _bucketsTable[index]!.Add(item, hash);
+        var added = _bucketsTable[index]!.Add(item);
 
         if (added)
         {
@@ -136,13 +136,11 @@ public class SimpleHashTable<T>
             return false;
         }
 
-        var locate = new SimpleHashBucketNode<T>(item, hash);
-
         for (var i = 0; i < _bucketsIndexes.Count; i++)
         {
             var bucketIndex = _bucketsIndexes[i];
 
-            if (_bucketsTable[bucketIndex]!.Items.ValueExists(locate))
+            if (_bucketsTable[bucketIndex]!.Contains(item))
             {
                 return true;
             }
@@ -161,9 +159,11 @@ public class SimpleHashTable<T>
         {
             var bucketIndex = _bucketsIndexes[i];
 
-            foreach (var node in _bucketsTable[bucketIndex]!.Items)
+            for (var x = 0; x < _bucketsTable[bucketIndex]!.Items.Count; x++)
             {
-                items[itemIndex++] = node!.Value;
+                var value = _bucketsTable[bucketIndex]!.Items[x];
+
+                items[itemIndex++] = value;
             }
         }
 
@@ -185,9 +185,11 @@ public class SimpleHashTable<T>
         {
             var bucketIndex = _bucketsIndexes[i];
 
-            foreach (var value in _bucketsTable[bucketIndex]!.Items)
+            for (var x = 0; x < _bucketsTable[bucketIndex]!.Items.Count; x++)
             {
-                var index = value!.HashCode % table.Capacity;
+                var value = _bucketsTable[bucketIndex]!.Items[x];
+
+                var index = value!.GetHashCode() % table.Capacity;
 
                 if (table[index] is null)
                 {
@@ -234,5 +236,51 @@ public class SimpleHashTable<T>
         var estimate = (int)(start * _extendFactor);
 
         return Num.GetNextPrimeNumber(estimate);
+    }
+}
+
+internal class SimpleHashBucket<T>(int key)
+{
+    public int Key = key;
+
+    internal SimpleArrayList<T> Items = new();
+
+    public void Clear()
+    {
+        Items.Clear();
+    }
+
+    public int Count
+        => Items.Count;
+
+    public bool Add(T item)
+    {
+        if (Items.Contains(item))
+        {
+            return false;
+        }
+
+        Items.Add(item);
+
+        return true;
+    }
+
+    public bool Remove(T item)
+    {
+        var index = Items.IndexOf(item);
+
+        if (index == -1)
+        {
+            return false;
+        }
+
+        Items.RemoveAt(index);
+
+        return true;
+    }
+
+    public bool Contains(T locate)
+    {
+        return Items.Contains(locate);
     }
 }
