@@ -5,4 +5,5 @@ public enum BinaryTreeTraversalAlgorithm
     InOrder,
     PreOrder,
     PostOrder,
+    BreadthFirstOrder,
 }

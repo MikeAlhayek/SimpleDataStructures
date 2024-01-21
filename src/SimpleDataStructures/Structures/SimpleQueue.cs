@@ -33,7 +33,7 @@ public class SimpleQueue<T>
         return _items.RemoveFirst();
     }
 
-    public T? Peek()
+    public T? Front()
     {
         if (_items.IsEmpty())
         {
@@ -41,6 +41,16 @@ public class SimpleQueue<T>
         }
 
         return _items.First();
+    }
+
+    public T? Rear()
+    {
+        if (_items.IsEmpty())
+        {
+            throw _emptyQueue;
+        }
+
+        return _items.Last();
     }
 
     public int Size()

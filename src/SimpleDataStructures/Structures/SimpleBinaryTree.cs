@@ -23,6 +23,9 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
             case BinaryTreeTraversalAlgorithm.PreOrder:
                 PreOrderTraverse(Root, action);
                 break;
+            case BinaryTreeTraversalAlgorithm.BreadthFirstOrder:
+                BreadthFirstOrderTraverse(Root, action);
+                break;
             default:
                 InOrderTraverse(Root, action);
                 break;
@@ -37,6 +40,15 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
 
     public void PostOrderTraverse(Action<T> action)
         => Traverse(BinaryTreeTraversalAlgorithm.PostOrder, action);
+
+    public void BreadthFirstOrderTraverse(Action<T> action)
+        => Traverse(BinaryTreeTraversalAlgorithm.BreadthFirstOrder, action);
+
+    public virtual void Clear()
+    {
+        Root = null;
+        Count = 0;
+    }
 
     public virtual bool Exists(T value)
     {
@@ -61,9 +73,11 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
 
         var newNode = new SimpleBinaryTreeNode<T>(value);
 
+        var node = Insert(Root, newNode);
+
         Count++;
 
-        return Insert(Root, newNode);
+        return node;
     }
 
     public virtual SimpleBinaryTreeNode<T>? Remove(T locate)
@@ -90,7 +104,7 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
         return Find(Root, value);
     }
 
-    protected abstract SimpleBinaryTreeNode<T> Insert(SimpleBinaryTreeNode<T> parent, SimpleBinaryTreeNode<T> child);
+    protected abstract SimpleBinaryTreeNode<T> Insert(SimpleBinaryTreeNode<T> parent, SimpleBinaryTreeNode<T> newNode);
 
     protected abstract SimpleBinaryTreeNode<T>? Remove(SimpleBinaryTreeNode<T> nodeToRemove);
 
@@ -167,7 +181,11 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
         }
     }
 
-    // root, left, right
+    /// <summary>
+    /// Pre-Order. Visit Root, left, then right.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="action"></param>
     private static void PreOrderTraverse(SimpleBinaryTreeNode<T>? node, Action<T> action)
     {
         if (node == null)
@@ -185,6 +203,39 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
         if (node.RightChild != null)
         {
             PreOrderTraverse(node.RightChild, action);
+        }
+    }
+
+    /// <summary>
+    /// Pre-Order, Level-order or breadth-first traversal. Visit Root, left, then right.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="action"></param>
+    private void BreadthFirstOrderTraverse(SimpleBinaryTreeNode<T>? node, Action<T> action)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        var queue = new SimpleQueue<SimpleBinaryTreeNode<T>>();
+        queue.Enqueue(node);
+
+        while (queue.Size() > 0)
+        {
+           var first = queue.Dequeue();
+
+            action(first!.Value);
+
+            if (first.LeftChild != null)
+            {
+                queue.Enqueue(first.LeftChild);
+            }
+
+            if (first.RightChild != null)
+            {
+                queue.Enqueue(first.RightChild);
+            }
         }
     }
 
@@ -208,5 +259,4 @@ public abstract class SimpleBinaryTree<T> where T : IComparable<T?>
 
         action(node.Value);
     }
-
 }

@@ -2,7 +2,7 @@ namespace SimpleDataStructures.Models;
 
 public class SimpleBinaryTreeNode<T> where T : IComparable<T?>
 {
-    public T Value { get; }
+    public T Value { get; internal set; }
 
     public SimpleBinaryTreeNode<T>? LeftChild { get; set; }
 
