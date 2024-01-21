@@ -193,7 +193,6 @@ public class SimpleArrayList<T>
     public int Count
         => NextAvailableIndex;
 
-
     protected void ExpandCapacityIfNeeded(int totalToAdd)
     {
         var availableSpace = Capacity - NextAvailableIndex;
